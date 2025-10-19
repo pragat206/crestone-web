@@ -226,6 +226,32 @@ document.querySelectorAll('video, img').forEach(element => {
     });
 });
 
+// Skyline Sketch Animation on Scroll
+const skylineObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const skylineSection = entry.target;
+            skylineSection.classList.add('animate');
+            
+            // Trigger animation by resetting the SVG
+            const svg = skylineSection.querySelector('.city-skyline-svg');
+            if (svg) {
+                // Clone and replace to restart animation
+                const svgClone = svg.cloneNode(true);
+                svg.parentNode.replaceChild(svgClone, svg);
+            }
+            
+            // Unobserve after animation is triggered once
+            skylineObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.3 });
+
+const skylineSection = document.querySelector('.skyline-sketch-section');
+if (skylineSection) {
+    skylineObserver.observe(skylineSection);
+}
+
 // Loading Animation
 window.addEventListener('load', function() {
     document.body.style.opacity = '0';
